@@ -12,8 +12,8 @@ const puzzles = [
 
 export default function WriteUpPage() {
     return (
-        <main className="pt-24 pb-16 px-4 min-h-screen">
-            <div className="max-w-4xl mx-auto">
+        <main className="pt-0 md:pt-10 lg:pt-10 pb-16 px-4 min-h-screen">
+            <div className="max-w-4xl p-2 mx-auto">
                 <h1 className="text-2xl md:text-4xl font-bold text-neon-green mb-2 tracking-wider">
                     WriteUp...
                 </h1>

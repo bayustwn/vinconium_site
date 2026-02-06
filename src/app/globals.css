@@ -144,8 +144,39 @@ body {
   }
 }
 
+@keyframes glitch-2 {
+  0% {
+    clip-path: inset(10% 0 85% 0);
+    transform: translate(1px, -1px);
+  }
+
+  25% {
+    clip-path: inset(55% 0 15% 0);
+    transform: translate(-1px, 1px);
+  }
+
+  50% {
+    clip-path: inset(35% 0 45% 0);
+    transform: translate(1px, -1px);
+  }
+
+  75% {
+    clip-path: inset(75% 0 10% 0);
+    transform: translate(-1px, 1px);
+  }
+
+  100% {
+    clip-path: inset(25% 0 35% 0);
+    transform: translate(1px, -1px);
+  }
+}
+
 .animate-glitch-1 {
   animation: glitch-1 4s infinite linear alternate-reverse;
+}
+
+.animate-glitch-2 {
+  animation: glitch-2 3s infinite linear alternate-reverse;
 }
 
 /* CRT Effects - Softened for Readability */

@@ -7,6 +7,7 @@ interface PixelCardProps {
     title?: string;
     onClose?: () => void;
     noPadding?: boolean;
+    style?: React.CSSProperties;
 }
 
 export function PixelCard({
@@ -15,7 +16,8 @@ export function PixelCard({
     variant = 'default',
     title,
     onClose,
-    noPadding = false
+    noPadding = false,
+    style
 }: PixelCardProps) {
     const getBg = () => {
         if (variant === 'glass') return 'pixel-glass';
@@ -24,15 +26,18 @@ export function PixelCard({
     };
 
     return (
-        <div className={`
-      border-[length:var(--border-width)] border-black 
-      ${getBg()} 
-      shadow-pixel 
-      relative
-      flex flex-col
-      transition-all duration-300
-      ${className}
-    `}>
+        <div
+            className={`
+                border-[length:var(--border-width)] border-black 
+                ${getBg()} 
+                shadow-pixel 
+                relative
+                flex flex-col
+                transition-all duration-300
+                ${className}
+            `}
+            style={style}
+        >
             {title && (
                 <div className="bg-black text-[9px] md:text-xs text-white p-1.5 md:p-2 flex justify-between items-center border-b-[length:var(--border-width)] border-white/10 select-none">
                     <div className="flex items-center gap-2 overflow-hidden flex-1">

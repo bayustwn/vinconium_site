@@ -36,7 +36,7 @@ export default async function RootLayout({
         <div className="crt-flicker fixed inset-0 pointer-events-none z-[9998] opacity-10"></div>
 
         <Taskbar />
-        <div className="pt-32 pb-32">
+        <div className="pt-22 pb-32">
           {children}
         </div>
         <HUD stats={stats} />

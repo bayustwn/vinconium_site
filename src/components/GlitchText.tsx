@@ -1,11 +1,14 @@
-import React from 'react';
-
-export function GlitchText({ text, className = '', as: Component = 'span' }: { text: string; className?: string; as?: React.ElementType }) {
+export function GlitchText({ text, className = '', as: Component = 'span', style = {} }: { text: string; className?: string; as?: React.ElementType; style?: React.CSSProperties }) {
     return (
-        <Component className={`relative inline-block font-bold group ${className}`}>
-            <span className="absolute top-0 left-0 -ml-[2px] text-cyber-pink opacity-70 animate-glitch-1 w-full h-full block" aria-hidden="true">{text}</span>
-            <span className="absolute top-0 left-0 ml-[2px] text-neon-green opacity-70 animate-glitch-2 w-full h-full block" aria-hidden="true">{text}</span>
-            <span className="relative z-10">{text}</span>
+        <Component
+            className={`grid group w-max isolate whitespace-nowrap ${className}`}
+            style={{
+                ...style
+            }}
+        >
+            <span className="[grid-area:1/1] -ml-[1px] text-cyber-pink opacity-70 animate-glitch-1 pointer-events-none select-none" aria-hidden="true">{text}</span>
+            <span className="[grid-area:1/1] ml-[1px] text-neon-green opacity-70 animate-glitch-2 pointer-events-none select-none" aria-hidden="true">{text}</span>
+            <span className="[grid-area:1/1] relative z-10">{text}</span>
         </Component>
     );
 }

@@ -22,50 +22,49 @@ export function Taskbar() {
             <div className="fixed top-0 left-0 right-0 z-[60] p-2 md:p-4 pointer-events-none">
                 <div className="flex justify-center w-full max-w-4xl mx-auto pointer-events-auto">
 
-                    {isMenuOpen && (
-                        <div className="absolute top-21 left-4 right-4 md:left-auto md:right-auto md:w-64 bg-pixel-gray border-[length:var(--border-width)] border-black shadow-pixel-lg p-2 animate-in slide-in-from-top-4 duration-200">
-                            <div className="bg-black text-white p-2 text-[10px] mb-2 font-bold flex justify-between border-b-[length:var(--border-width)] border-white/10">
-                                <span>VINCO_OS MENU</span>
-                                <button onClick={() => setIsMenuOpen(false)}>X</button>
-                            </div>
-                            <div className="flex flex-col gap-1 ">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className={`p-3 border-[length:var(--border-width)] border-transparent hover:border-black hover:bg-white hover:text-black flex items-center gap-3 text-xs font-bold transition-all ${pathname === item.href ? 'bg-white/10 border-white/20' : ''}`}
-                                    >
-                                        <span className="text-lg">{item.icon}</span>
-                                        {item.label}
-                                    </Link>
-                                ))}
-                                <div className="h-[1px] bg-white/10 my-1"></div>
-                                <button
-                                    onClick={() => {
-                                        setIsTerminalOpen(true);
-                                        setIsMenuOpen(false);
-                                    }}
-                                    className="p-3 border-[length:var(--border-width)] border-transparent hover:border-black hover:bg-neon-green hover:text-black flex items-center gap-3 text-xs font-bold transition-all"
-                                >
-                                    <span className="text-lg">⌨</span>
-                                    TERMINAL
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
                     <div className="bg-pixel-gray border-[length:var(--border-width)] border-black shadow-pixel-lg flex items-center p-1 md:p-2 gap-1 md:gap-4 w-full md:w-auto relative">
+                        {isMenuOpen && (
+                            <div className="absolute top-[calc(100%+8px)] left-0 right-0 md:right-auto md:w-64 bg-pixel-gray border-[length:var(--border-width)] border-black shadow-pixel-lg p-2 animate-in slide-in-from-top-4 duration-200 z-50">
+                                <div className="bg-black text-white p-2 text-[10px] mb-2 font-bold flex justify-between border-b-[length:var(--border-width)] border-white/10">
+                                    <span>VINCO_OS MENU</span>
+                                    <button onClick={() => setIsMenuOpen(false)} className="hover:text-retro-yellow cursor-pointer">X</button>
+                                </div>
+                                <div className="flex flex-col gap-1 ">
+                                    {navItems.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className={`p-3 border-[length:var(--border-width)] border-transparent hover:border-black hover:bg-white hover:text-black flex items-center gap-3 text-xs font-bold transition-all ${pathname === item.href ? 'bg-white/10 border-white/20' : ''}`}
+                                        >
+                                            <span className="text-lg">{item.icon}</span>
+                                            {item.label}
+                                        </Link>
+                                    ))}
+                                    <div className="h-[1px] bg-white/10 my-1"></div>
+                                    <button
+                                        onClick={() => {
+                                            setIsTerminalOpen(true);
+                                            setIsMenuOpen(false);
+                                        }}
+                                        className="p-3 border-[length:var(--border-width)] border-transparent hover:border-black hover:bg-neon-green hover:text-black flex items-center gap-3 text-xs font-bold transition-all cursor-pointer"
+                                    >
+                                        <span className="text-lg">⌨</span>
+                                        TERMINAL
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className={`
-              bg-neon-green text-black px-3 md:px-4 py-1.5 md:py-2 
-              font-bold text-[10px] md:text-sm shadow-pixel-sm border-[length:var(--border-width)] border-black 
-              active:translate-y-[2px] active:shadow-none transition-all
-              flex items-center gap-2 shrink-0 sm:hidden
-              ${isMenuOpen ? 'bg-white shadow-none translate-y-[2px]' : ''}
-            `}
+                bg-neon-green text-black px-3 md:px-4 py-1.5 md:py-2 
+                font-bold text-[10px] md:text-sm shadow-pixel-sm border-[length:var(--border-width)] border-black 
+                active:translate-y-[2px] active:shadow-none transition-all
+                flex items-center gap-2 shrink-0 sm:hidden
+                ${isMenuOpen ? 'bg-white shadow-none translate-y-[2px]' : ''}
+              `}
                         >
                             <span className="text-lg leading-none">❖</span>
                             <span>START_OS</span>
