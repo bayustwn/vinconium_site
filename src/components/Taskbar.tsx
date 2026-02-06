@@ -12,6 +12,7 @@ export function Taskbar() {
         { label: 'HOME', href: '/', color: 'neon', icon: '⌂' },
         { label: 'VIDEOS', href: '/videos', color: 'pink', icon: '▶' },
         { label: 'SHOP', href: '/shop', color: 'retro', icon: '🛒' },
+        { label: 'WRITE UP', href: '/write-up', color: 'neon', icon: '📄' },
     ];
 
     return (
