@@ -1,4 +1,4 @@
-export const COMMANDS = ['help', 'about', 'ping', 'sysinfo', 'clear', 'exit', 'theme', 'ssh'];
+export const COMMANDS = ['help', 'about', 'sysinfo', 'clear', 'exit', 'theme'];
 
 export const INITIAL_HISTORY = [
     ' __     _____ _   _  ____ ___  _   _ ___ _   _ __  __ ',

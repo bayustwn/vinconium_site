@@ -1,6 +1,5 @@
 import { ThemeName, CommandResult } from './types';
 import { NEOFETCH_LOGO, COLORS_PALETTE } from './constants';
-import { pingHost } from '../network';
 
 export async function executeCommand(
     fullCmd: string,
@@ -22,10 +21,8 @@ export async function executeCommand(
                     'Available commands:',
                     '  help             - Show this help message',
                     '  about            - About Vinconium',
-                    '  ping <host>      - Real network ping',
                     '  theme <name>     - Change theme (matrix, neon, amber, ghost)',
                     '  sysinfo          - Display system statistics',
-                    '  ssh <user@host>  - Connect to a remote server',
                     '  clear            - Clear terminal screen',
                     '  exit             - Close terminal',
                 ]
@@ -41,11 +38,6 @@ export async function executeCommand(
                     value: [`ERROR: Theme [${args[0] || 'null'}] not found. Available: matrix, neon, amber, ghost`]
                 };
             }
-
-        case 'ping':
-            const host = args[0] || 'google.com';
-            const results = await pingHost(host);
-            return { type: 'PING', value: results };
 
         case 'about':
             return {
@@ -86,20 +78,6 @@ export async function executeCommand(
             neofetch.push('');
             neofetch.push(' '.repeat(NEOFETCH_LOGO[0].length + 2) + COLORS_PALETTE);
             return { type: 'OUTPUT', value: neofetch };
-
-        case 'ssh':
-            const target = args[0];
-            if (!target || !target.includes('@')) {
-                return {
-                    type: 'OUTPUT',
-                    value: ['USAGE: ssh user@host', 'EXAMPLE: ssh root@127.0.0.1']
-                };
-            }
-            const [user, hostName] = target.split('@');
-            return {
-                type: 'SSH_CONNECT',
-                value: { user, host: hostName }
-            };
 
         case 'echo':
             return { type: 'OUTPUT', value: [args.join(' ') || ' '] };

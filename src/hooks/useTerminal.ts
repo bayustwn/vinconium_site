@@ -3,7 +3,6 @@ import { ThemeName, CommandResult } from '../lib/terminal/types';
 import { THEMES } from '../lib/terminal/themes';
 import { INITIAL_HISTORY, COMMANDS } from '../lib/terminal/constants';
 import { executeCommand } from '../lib/terminal/commands';
-import { useSSH } from './useSSH';
 import { UAParser } from 'ua-parser-js';
 
 export function useTerminal(onClose: () => void) {
@@ -35,37 +34,17 @@ export function useTerminal(onClose: () => void) {
     }, []);
 
 
-    const ssh = useSSH({
-        currentTheme,
-        setCurrentTheme,
-        onData: (data) => {
-            setHistory(prev => {
-                const newHistory = [...prev];
-                const incomingLines = data.split('\n');
-                newHistory[newHistory.length - 1] += incomingLines[0];
-                for (let j = 1; j < incomingLines.length; j++) {
-                    newHistory.push(incomingLines[j]);
-                }
-                return newHistory.length > 500 ? newHistory.slice(-500) : newHistory;
-            });
-        },
-        onClose: (msg) => {
-            setHistory(['']);
-            appendHistory(msg);
-        }
-    });
-
     const suggestion = useMemo(() => {
-        if (!input.trim() || isProcessing || ssh.isAuthenticating || ssh.sshSession) return '';
+        if (!input.trim() || isProcessing) return '';
         const match = COMMANDS.find(c => c.startsWith(input.toLowerCase()));
         return match && match !== input.toLowerCase() ? match : '';
-    }, [input, isProcessing, ssh.isAuthenticating, ssh.sshSession]);
+    }, [input, isProcessing]);
 
     useEffect(() => {
         if (!isProcessing && inputRef.current) {
             inputRef.current.focus();
         }
-    }, [isProcessing, history, ssh.sshSession]);
+    }, [isProcessing, history]);
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -80,12 +59,6 @@ export function useTerminal(onClose: () => void) {
 
     const handleCommand = async (cmd: string) => {
         const fullCmd = cmd.trim();
-
-        if (ssh.sshSession) {
-            if (fullCmd === 'clear') setHistory(['']);
-            await ssh.sendInput(cmd + '\n');
-            return;
-        }
 
         if (!fullCmd) return;
 
@@ -102,10 +75,6 @@ export function useTerminal(onClose: () => void) {
         );
 
         switch (result.type) {
-            case 'SSH_CONNECT':
-                ssh.connect(result.value.user, result.value.host);
-                appendHistory(`Password for ${result.value.user}@${result.value.host}: `);
-                break;
             case 'CLEAR':
                 setHistory([]);
                 break;
@@ -116,13 +85,6 @@ export function useTerminal(onClose: () => void) {
                 break;
             case 'EXIT':
                 onClose();
-                break;
-            case 'PING':
-                appendHistory(`PINGING ${fullCmd.split(' ')[1] || 'google.com'}...`);
-                for (const line of result.value as string[]) {
-                    await new Promise(r => setTimeout(r, 200));
-                    appendHistory(line);
-                }
                 break;
             case 'OUTPUT':
                 if (result.value) appendHistory(result.value);
@@ -136,11 +98,6 @@ export function useTerminal(onClose: () => void) {
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (isProcessing) return;
-
-        if (ssh.sshSession && !ssh.isAuthenticating && e.key === 'c' && e.ctrlKey) {
-            handleCommand('\x03');
-            return;
-        }
 
         if (e.key === 'ArrowUp') {
             e.preventDefault();
@@ -167,19 +124,13 @@ export function useTerminal(onClose: () => void) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (isProcessing || (!input.trim() && !ssh.sshSession && !ssh.isAuthenticating)) return;
-        if (ssh.isAuthenticating) {
-            ssh.authenticate(input).then(success => {
-                if (success) setHistory(['']);
-            });
-        }
-        else handleCommand(input);
+        if (isProcessing || !input.trim()) return;
+        handleCommand(input);
         setInput('');
     };
 
     return {
         input, setInput, history, theme, currentTheme, isProcessing,
-        suggestion, isSecureInput: ssh.isSecureInput, sshSession: ssh.sshSession,
-        inputRef, scrollRef, handleKeyDown, handleSubmit, isEasterEgg
+        suggestion, inputRef, scrollRef, handleKeyDown, handleSubmit, isEasterEgg
     };
 }

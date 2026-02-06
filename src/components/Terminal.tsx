@@ -14,8 +14,6 @@ export function Terminal({ onClose }: TerminalProps) {
         currentTheme,
         isProcessing,
         suggestion,
-        isSecureInput,
-        sshSession,
         inputRef,
         scrollRef,
         handleKeyDown,
@@ -62,13 +60,13 @@ export function Terminal({ onClose }: TerminalProps) {
         }
     }, [isEasterEgg]);
 
-    const prompt = (sshSession && sshSession.id) ? '' : 'vinco@system:~$';
+    const prompt = 'vinco@system:~$';
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/80 backdrop-blur-md pointer-events-auto overflow-hidden">
             <div className="w-full max-w-4xl h-full max-h-[85vh] md:max-h-[75vh] flex flex-col gap-2 md:gap-4 animate-in zoom-in duration-300">
                 <PixelCard
-                    title={sshSession && sshSession.id ? `SSH_ACTIVE: ${sshSession.user}@${sshSession.host}` : "VINCO_CORE_TERMINAL"}
+                    title="VINCO_CORE_TERMINAL"
                     variant="primary"
                     onClose={onClose}
                     className={`w-full flex-1 overflow-hidden border-2 transition-colors duration-500 ${theme.bg} ${theme.border}`}
@@ -80,31 +78,6 @@ export function Terminal({ onClose }: TerminalProps) {
                         onClick={() => inputRef.current?.focus()}
                     >
                         {history.map((line, i) => {
-                            const isLastLine = i === history.length - 1;
-                            const isSshPrompt = sshSession && sshSession.id;
-
-                            if (isLastLine && isSshPrompt) {
-                                return (
-                                    <div key={i} className="inline-flex flex-wrap w-full items-baseline gap-0">
-                                        <span className={`whitespace-pre-wrap ${line.includes(`@${sshSession.host}`) || line.endsWith('$ ') || line.endsWith('# ') ? `${theme.accent} ${theme.glow}` : ''}`}>
-                                            {line}
-                                        </span>
-                                        <form onSubmit={handleSubmit} className="inline-flex flex-1 min-w-[10px]">
-                                            <input
-                                                ref={inputRef}
-                                                type={isSecureInput ? "password" : "text"}
-                                                value={input}
-                                                onChange={(e) => setInput(e.target.value)}
-                                                onKeyDown={handleKeyDown}
-                                                className={`flex-1 bg-transparent border-none outline-none ${theme.text} ${theme.caret} font-mono placeholder:opacity-0 relative z-10 p-0 m-0 h-auto leading-tight`}
-                                                autoComplete="off"
-                                                spellCheck="false"
-                                            />
-                                        </form>
-                                    </div>
-                                );
-                            }
-
                             return (
                                 <div key={i} className={`whitespace-pre-wrap min-h-[1.2em] leading-tight ${line.startsWith('vinco@system') ? `${theme.accent} ${theme.glow}` : ''}`}>
                                     {line}
@@ -113,35 +86,33 @@ export function Terminal({ onClose }: TerminalProps) {
                         })}
 
 
-                        {(!sshSession || !sshSession.id) && (
-                            <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-2">
-                                <span className={`shrink-0 font-bold ${theme.accent}`}>{prompt}</span>
-                                <div className="flex-1 relative flex items-center">
-                                    {isProcessing && (
-                                        <span className="absolute inset-0 opacity-50 animate-pulse z-10">PROCESSING_SIGNAL...</span>
-                                    )}
+                        <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-2">
+                            <span className={`shrink-0 font-bold ${theme.accent}`}>{prompt}</span>
+                            <div className="flex-1 relative flex items-center">
+                                {isProcessing && (
+                                    <span className="absolute inset-0 opacity-50 animate-pulse z-10">PROCESSING_SIGNAL...</span>
+                                )}
 
-                                    {!isProcessing && suggestion && (
-                                        <div className="absolute inset-0 pointer-events-none flex items-center">
-                                            <span className="opacity-0">{input}</span>
-                                            <span className="opacity-20">{suggestion.slice(input.length)}</span>
-                                        </div>
-                                    )}
+                                {!isProcessing && suggestion && (
+                                    <div className="absolute inset-0 pointer-events-none flex items-center">
+                                        <span className="opacity-0">{input}</span>
+                                        <span className="opacity-20">{suggestion.slice(input.length)}</span>
+                                    </div>
+                                )}
 
-                                    <input
-                                        ref={inputRef}
-                                        type={isSecureInput ? "password" : "text"}
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        onKeyDown={handleKeyDown}
-                                        className={`flex-1 bg-transparent border-none outline-none ${theme.text} ${theme.caret} font-mono placeholder:opacity-20 ${isProcessing ? 'opacity-0' : 'opacity-100'} relative z-10`}
-                                        autoComplete="off"
-                                        spellCheck="false"
-                                        placeholder={isSecureInput ? "" : "Type 'help'..."}
-                                    />
-                                </div>
-                            </form>
-                        )}
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    className={`flex-1 bg-transparent border-none outline-none ${theme.text} ${theme.caret} font-mono placeholder:opacity-20 ${isProcessing ? 'opacity-0' : 'opacity-100'} relative z-10`}
+                                    autoComplete="off"
+                                    spellCheck="false"
+                                    placeholder="Type 'help'..."
+                                />
+                            </div>
+                        </form>
                     </div>
                 </PixelCard>
 
