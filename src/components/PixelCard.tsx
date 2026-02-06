@@ -54,7 +54,7 @@ export function PixelCard({
                     </div>
                 </div>
             )}
-            <div className={`${(title && !noPadding) ? 'p-2 sm:p-4 md:p-6' : 'p-0'} flex-1`}>
+            <div className={`${(title && !noPadding) ? 'p-2 sm:p-4 md:p-6' : 'p-0'} flex-1 flex flex-col min-h-0 overflow-hidden`}>
                 {children}
             </div>
         </div>
